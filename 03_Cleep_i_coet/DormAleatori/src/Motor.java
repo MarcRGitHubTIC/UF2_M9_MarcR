@@ -25,7 +25,7 @@ public class Motor extends Thread {
                     }
                 }
 
-                // Ajustar la potencia actual hacia la potencia objetivo
+                // Ajustar potencia actual a potencia objetivo
                 if (potenciaActual < powerTarget) {
                     potenciaActual++;
                     System.out.printf("%s: Incre. Objectiu: %d Actual: %d%n", getName(), powerTarget, potenciaActual);
@@ -38,7 +38,7 @@ public class Motor extends Thread {
                     System.out.printf("%s: FerRes Objectiu: %d Actual: %d%n", getName(), powerTarget, potenciaActual);
                 }
 
-                Thread.sleep(200); // Simula el tiempo necesario para cambiar la potencia
+                Thread.sleep(200); // Tiempo simulado de delay en real life
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

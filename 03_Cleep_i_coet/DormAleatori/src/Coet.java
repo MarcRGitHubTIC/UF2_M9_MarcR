@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Coet {
-    private Motor[] motors;
+    private final Motor[] motors;
 
     public Coet() {
         motors = new Motor[4];
@@ -22,7 +22,7 @@ public class Coet {
         for (Motor motor : motors) {
             motor.setPotencia(potencia);
         }
-        esperaFinalitzacio(); // Esperar que todos los motores terminen de ajustarse
+        esperaFinalitzacio();
     }
 
     private void esperaFinalitzacio() {
@@ -36,7 +36,7 @@ public class Coet {
                 }
             }
             try {
-                Thread.sleep(500); // Pausa breve antes de volver a verificar
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -58,7 +58,6 @@ public class Coet {
                     if (potencia == 0) {
                         System.out.println("Apagando motores...");
                         apagar = true;
-                        break;
                     }
                 } catch (NumberFormatException e) {
                     System.err.println("Entrada inválida");

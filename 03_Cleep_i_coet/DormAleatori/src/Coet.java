@@ -58,6 +58,7 @@ public class Coet {
                     if (potencia == 0) {
                         System.out.println("Apagando motores...");
                         apagar = true;
+                        break;
                     }
                 } catch (NumberFormatException e) {
                     System.err.println("Entrada inválida");

@@ -18,19 +18,11 @@ public class Treballador extends Thread {
         this.rnd = new Random();
     }
 
-    private float calculaMensualBrut() {
-        return souAnualBrut / 12;
+    public void cobra(){
+        cobrat += souAnualBrut / 12;
     }
-
-    public void cobra() {
-        float ingresoMensual = calculaMensualBrut();
-        cobrat += ingresoMensual;
-    }  
-
-    public void pagaImpostos() {
-        float ingresoMensual = calculaMensualBrut();
-        float impuestos = ingresoMensual * 0.24f;
-        cobrat -= impuestos;
+    public void pagaImpostos(){
+        cobrat -= souAnualBrut / 12 * 0.24f;
     }
 
     public float getCobrat() {
@@ -43,8 +35,11 @@ public class Treballador extends Thread {
 
     @Override
     public void run() {
-        for (edatActual = 0; edatActual < edatFiTreball; edatActual++) {
-            if (edatActual >= edatIniciTreball) {
+        int mesesTotales = edatFiTreball * 12;
+        for(int i = 0; i < mesesTotales; i++){
+            if(i%12 == 0){
+                edatActual++;
+            }if (edatActual >= edatIniciTreball) {
                 cobra();
                 pagaImpostos();
             }

@@ -18,12 +18,19 @@ public class Treballador extends Thread {
         this.rnd = new Random();
     }
 
-    public void cobra() {
-        cobrat += souAnualBrut / 12;
+    private float calculaMensualBrut() {
+        return souAnualBrut / 12;
     }
 
+    public void cobra() {
+        float ingresoMensual = calculaMensualBrut();
+        cobrat += ingresoMensual;
+    }  
+
     public void pagaImpostos() {
-        cobrat -= (cobrat / 12) * 0.24;
+        float ingresoMensual = calculaMensualBrut();
+        float impuestos = ingresoMensual * 0.24f;
+        cobrat -= impuestos;
     }
 
     public float getCobrat() {
@@ -42,7 +49,7 @@ public class Treballador extends Thread {
                 pagaImpostos();
             }
             try {
-                Thread.sleep(rnd.nextInt(10)); // Simulacion de tiempo
+                Thread.sleep(rnd.nextInt(10));
             } catch (InterruptedException e) {
                 System.err.println("Error al simular el temps: " + e.getMessage());
             }

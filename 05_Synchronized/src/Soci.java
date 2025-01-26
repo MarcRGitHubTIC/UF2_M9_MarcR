@@ -13,14 +13,16 @@ public class Soci extends Thread{
     @Override
     public void run(){
         for(int i = 0; i < max_year; i++){
-            for(int j = 1; j < 13; j++){
-                float saldo = 0;
-                if (j % 2 == 0){
-                    saldo = account.getSaldo() + 10;
-                    account.setSaldo(saldo);
-                }else{
-                    saldo = account.getSaldo() - 10;
-                    account.setSaldo(saldo);
+            for(int j = 0; j < 12; j++){
+                synchronized (account){
+                    float saldo = 0f;
+                    if (j % 2 == 0){
+                        saldo = account.getSaldo() + 10f;
+                        account.setSaldo(saldo);
+                    }else{
+                        saldo = account.getSaldo() - 10f;
+                        account.setSaldo(saldo);
+                    }
                 }
                 try{
                     sleep(random.nextInt(101));

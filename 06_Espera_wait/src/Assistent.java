@@ -20,13 +20,12 @@ public class Assistent extends Thread {
             try {
                 int probabilitat = random.nextInt(100);
 
-                if (probabilitat < 30) {  // Probabilidad del 70% para ferReserva
+                if (probabilitat < 30) {
                     esdeveniment.ferReserva(this);
-                } else {  // Probabilidad del 30% para cancelarReserva
+                } else {
                     esdeveniment.cancelaReserva(this);
                 }
 
-                // Espera aleatoria entre 0 y 1 segundo
                 Thread.sleep(random.nextInt(1000));
 
             } catch (InterruptedException e) {

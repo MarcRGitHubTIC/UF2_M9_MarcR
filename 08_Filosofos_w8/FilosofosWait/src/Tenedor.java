@@ -24,16 +24,22 @@ public class Tenedor {
         this.idPropietari = id;
     }
 
-    public synchronized void cogerTenedor(int id) {
+    public synchronized boolean cogerTenedor(int id) {
+        long inicio = System.currentTimeMillis();
         while (idPropietari != LLIURE) {
             try {
-                wait();
+                wait(200);
+                if (System.currentTimeMillis() - inicio >= 200) {
+                    return false;
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
         idPropietari = id;
+        return true;
     }
+    
 
     public synchronized void soltarTenedor() {
         idPropietari = LLIURE;

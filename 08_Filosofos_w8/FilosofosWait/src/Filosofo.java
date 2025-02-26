@@ -4,7 +4,6 @@ public class Filosofo implements Runnable {
     private Tenedor tenedorDerecha;
     private int hambre;
 
-    // Constructor con el número de comensal
     public Filosofo(int id, Tenedor tenedorIzquierda, Tenedor tenedorDerecha) {
         this.id = id;
         this.tenedorIzquierda = tenedorIzquierda;
@@ -12,7 +11,6 @@ public class Filosofo implements Runnable {
         this.hambre = 0;
     }
 
-    // Métodos getter para los tenedores
     public Tenedor getTenedorIzquierda() {
         return tenedorIzquierda;
     }
@@ -21,7 +19,6 @@ public class Filosofo implements Runnable {
         return tenedorDerecha;
     }
 
-    // Método pensar (duerme un tiempo aleatorio)
     private void pensar() {
         System.out.println("Filósofo " + id + " pensando");
         try {
@@ -31,7 +28,6 @@ public class Filosofo implements Runnable {
         }
     }
 
-    // Método comer (duerme un tiempo aleatorio)
     private void comer() {
         System.out.println("Filósofo " + id + " comiendo");
         try {
@@ -44,18 +40,14 @@ public class Filosofo implements Runnable {
     }
 
     private void cogerTenedores() {
-        cogerTenedorIzquierda();
-        cogerTenedorDerecha();
-    }
-
-    private void cogerTenedorIzquierda() {
-        tenedorIzquierda.cogerTenedor(id);
-        System.out.println("Filósofo " + id + " coge tenedor izquierdo " + tenedorIzquierda.getNumero());
-    }
-
-    private void cogerTenedorDerecha() {
-        tenedorDerecha.cogerTenedor(id);
-        System.out.println("Filósofo " + id + " coge tenedor derecho " + tenedorDerecha.getNumero());
+        boolean izqCogido = tenedorIzquierda.cogerTenedor(id);
+        boolean derCogido = tenedorDerecha.cogerTenedor(id);
+    
+        if (!izqCogido || !derCogido) {
+            if (izqCogido) tenedorIzquierda.soltarTenedor();
+            if (derCogido) tenedorDerecha.soltarTenedor();
+            hambre++;
+        }
     }
 
     private void soltarTenedores() {
@@ -82,18 +74,15 @@ public class Filosofo implements Runnable {
     
         System.out.println("Filósofo " + id + " intenta coger los tenedores");
     
-        // Intentar coger los dos tenedores
         cogerTenedores();
     
-        // Comprobar si ambos tenedores están cogidos correctamente
         if (tenedorIzquierda.estaCogido(id) && tenedorDerecha.estaCogido(id)) {
             exito = true;
-            hambre = 0;  // Reseteamos hambre al comer exitosamente
+            hambre = 0;
             System.out.println("Filósofo " + id + " ha conseguido ambos tenedores y puede comer");
         } else {
             System.out.println("Filósofo " + id + " no ha conseguido ambos tenedores");
     
-            // Si no se logró coger los dos tenedores, soltar los que se habían cogido
             if (tenedorIzquierda.estaCogido(id)) {
                 tenedorIzquierda.soltarTenedor();
                 System.out.println("Filósofo " + id + " suelta tenedor izquierdo " + tenedorIzquierda.getNumero());
@@ -104,7 +93,6 @@ public class Filosofo implements Runnable {
             }
         }
     
-        // Incrementar hambre solo si no pudo comer
         if (!exito) {
             hambre++;
             System.out.println("Filósofo " + id + " no pudo comer, hambre = " + hambre);

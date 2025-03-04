@@ -1,6 +1,6 @@
 public class Mesa {
-    private Filosofo[] comensales;
-    private Tenedor[] tenedores;
+    private final Filosofo[] comensales;
+    private final Tenedor[] tenedores;
 
     public Mesa(int numFilosofos) {
         tenedores = new Tenedor[numFilosofos];
@@ -16,11 +16,11 @@ public class Mesa {
     }
 
     public void showMesa() {
-        System.out.println("------ Mesa ------");
+        System.out.println("------ Estado de la Mesa ------");
         for (Filosofo f : comensales) {
-            System.out.println("Filosofo" + f.id + " | Izq: " + f.tenedorIzquierda.getNumero() + " | Der: " + f.tenedorDerecha.getNumero());
+            System.out.println("Filósofo " + f.getId() + " | Izq: " + f.getTenedorIzquierda().getNumero() + " | Der: " + f.getTenedorDerecha().getNumero());
         }
-        System.out.println("------------------");
+        System.out.println("--------------------------------");
     }
 
     public void callMesa() {

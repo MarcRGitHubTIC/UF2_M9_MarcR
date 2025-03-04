@@ -1,6 +1,7 @@
 public class App {
     public static void main(String[] args) {
-        Mesa mesa = new Mesa(5);
+        int numFilosofos = 5;
+        Mesa mesa = new Mesa(numFilosofos);
         mesa.showMesa();
         mesa.callMesa();
     }

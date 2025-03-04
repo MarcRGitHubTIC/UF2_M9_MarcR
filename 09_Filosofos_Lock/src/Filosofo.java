@@ -1,89 +1,98 @@
 import java.util.concurrent.TimeUnit;
 
 public class Filosofo implements Runnable {
-    public int id;
-    public Tenedor tenedorIzquierda;
-    public Tenedor tenedorDerecha;
-    private long startHambre;
-    private long endHambre;
-    private long hambre;
+    private final int id;
+    private final Tenedor tenedorIzquierda;
+    private final Tenedor tenedorDerecha;
+    private long inicioGana;
+    private long fiGana;
+    private long gana;
 
     public Filosofo(int id, Tenedor tenedorIzquierda, Tenedor tenedorDerecha) {
         this.id = id;
         this.tenedorIzquierda = tenedorIzquierda;
         this.tenedorDerecha = tenedorDerecha;
-        this.hambre = 0;
+        this.gana = 0;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Tenedor getTenedorIzquierda() {
+        return tenedorIzquierda;
+    }
+
+    public Tenedor getTenedorDerecha() {
+        return tenedorDerecha;
     }
 
     private void pensar() {
-        System.out.println("Filosofo" + id + " pensando");
+        System.out.println("Filósofo " + id + " está pensando.");
+        inicioGana = System.currentTimeMillis();
         try {
-            Thread.sleep((long) (Math.random() * 1000 + 1000));
+            Thread.sleep((long) (Math.random() * 1000 + 1000)); // 1s - 2s
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    private boolean cogerTenedores() {
-        System.out.println("Filosofo" + id + " tiene tenedor izq(" + tenedorIzquierda.getNumero() + ") der(" + tenedorDerecha.getNumero() + ")");
-        
-        tenedorIzquierda.coger();
-        
-        if (tenedorDerecha.bloqueo.tryLock()) {
-            return true;
-        } else {
-            if (tenedorIzquierda.bloqueo.isHeldByCurrentThread()) {
-                tenedorIzquierda.dejar();
-            }
+    private boolean agafarForquilles() {
+        if (!tenedorIzquierda.coger(id, "izquierda")) {
             return false;
         }
-    }
-
-    private void dejarTenedores() {
-        if (tenedorIzquierda.bloqueo.isHeldByCurrentThread()) {
-            tenedorIzquierda.dejar();
-        }
-        if (tenedorDerecha.bloqueo.isHeldByCurrentThread()) {
-            tenedorDerecha.dejar();
-        }
-    }
-
-    private void calcularHambre() {
-        hambre = TimeUnit.SECONDS.convert(endHambre - startHambre, TimeUnit.MILLISECONDS);
-    }
-
-    private void resetHambre() {
-        startHambre = System.currentTimeMillis();
-        hambre = 0;
-    }
-
-    private void comer() {
-        endHambre = System.currentTimeMillis();
-        calcularHambre();
-        System.out.println("Filosofo" + id + " come con hambre " + hambre);
         try {
-            Thread.sleep((long) (Math.random() * 1000 + 1000));
+            if (!tenedorDerecha.coger(id, "derecha")) {
+                tenedorIzquierda.dejar(id, "izquierda");
+                return false;
+            }
+        } catch (Exception e) {
+            tenedorIzquierda.dejar(id, "izquierda");
+            return false;
+        }
+        return true;
+    }
+
+    private void deixarForquilles() {
+        tenedorDerecha.dejar(id, "derecha");
+        tenedorIzquierda.dejar(id, "izquierda");
+    }
+
+    private void calcularGana() {
+        fiGana = System.currentTimeMillis();
+        gana = TimeUnit.SECONDS.convert(fiGana - inicioGana, TimeUnit.MILLISECONDS);
+    }
+
+    private void resetGana() {
+        inicioGana = System.currentTimeMillis();
+        gana = 0;
+    }
+
+    private void menjar() {
+        calcularGana();
+        System.out.println("Filósofo " + id + " está comiendo. Hambre: " + gana);
+        try {
+            Thread.sleep((long) (Math.random() * 1000 + 1000)); // 1s - 2s
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Filosofo" + id + " ha terminado de comer");
-        resetHambre();
-        dejarTenedores();
+        System.out.println("Filósofo " + id + " ha terminado de comer.");
+        resetGana();
+        deixarForquilles();
     }
 
     @Override
     public void run() {
         while (true) {
             pensar();
-            startHambre = System.currentTimeMillis();
-            while (!cogerTenedores()) {
+            while (!agafarForquilles()) {
                 try {
-                    Thread.sleep((long) (Math.random() * 500 + 500));
+                    Thread.sleep((long) (Math.random() * 500 + 500)); // Espera entre 0.5s - 1s
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            comer();
+            menjar();
         }
     }
 }
